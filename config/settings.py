@@ -26,7 +26,13 @@ SECRET_KEY = 'django-insecure-l3^+j)iz=gtwb5a4+0j61=6zv%-oi5m$j$8!m@$t=$%9y*mvtc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '.onrender.com',
+    'minhaj-app.onrender.com', '127.0.0.1', 'localhost'
+]
+
 
 
 # Application definition
@@ -121,3 +127,12 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ALLOWED_HOSTS = ['.onrender.com']
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "unsafe-secret-key-for-local"
+)
+
+DEBUG = os.environ.get("DEBUG") == "True"
