@@ -4,12 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout # নাম পরিবর্তন করা হয়েছে
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import Profile
 
 def home(request):
     return render(request, 'home.html')
-
-def profile(request):
-    return render(request, 'profile.html')
 
 def logout_view(request):
     logout(request)
@@ -64,3 +62,29 @@ def signup(request):
 @login_required(login_url='login')
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+@login_required(login_url='login')
+def profile(request):
+    # 'get' এর বদলে 'get_or_create' ব্যবহার করুন
+    # এটি প্রোফাইল না থাকলে অটোমেটিক তৈরি করে দেবে, ফলে এরর আসবে না
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        # ইউজারের নাম আপডেট (User মডেল থেকে)
+        request.user.first_name = request.POST.get('full_name')
+        request.user.save()
+
+        # প্রোফাইল মডেলের ডাটা আপডেট
+        profile.phone = request.POST.get('phone')
+        profile.address = request.POST.get('address')
+        profile.bio = request.POST.get('about')
+        
+        # ছবি আপলোড চেক
+        if request.FILES.get('image'):
+            profile.profile_pic = request.FILES.get('image')
+        
+        profile.save()
+        return redirect('profile')
+
+    return render(request, 'profile.html', {'profile': profile})
+

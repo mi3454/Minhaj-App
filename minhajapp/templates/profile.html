@@ -3,173 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile - Minhaj App</title>
-
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            color: white;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: rgba(0,0,0,0.4);
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar h2 {
-            margin: 0;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: bold;
-        }
-
-        /* Profile container */
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: rgba(0,0,0,0.35);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .profile-header img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #ff9800;
-        }
-
-        .profile-header h1 {
-            margin: 0;
-        }
-
-        .profile-header p {
-            opacity: 0.9;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            font-size: 15px;
-        }
-
-        textarea {
-            resize: none;
-            height: 90px;
-        }
-
-        .btn {
-            background: #ff9800;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background: #e68900;
-        }
+        /* আপনার আগের দেওয়া CSS স্টাইলগুলো এখানে থাকবে */
+        body { margin: 0; font-family: Arial; background: linear-gradient(135deg, #667eea, #764ba2); min-height: 100vh; color: white; }
+        .navbar { background: rgba(0,0,0,0.4); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; }
+        .container { max-width: 900px; margin: 40px auto; background: rgba(0,0,0,0.35); padding: 40px; border-radius: 15px; }
+        .profile-header { display: flex; align-items: center; gap: 30px; margin-bottom: 30px; }
+        .profile-header img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid #ff9800; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: none; outline: none; }
+        .btn { background: #ff9800; color: white; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
         <h2>Minhaj App</h2>
         <div>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/">Logout</a>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
     </div>
 
-    <!-- Profile -->
     <div class="container">
-        <div class="profile-header">
-            <img src="https://via.placeholder.com/150" alt="Profile Picture">
-            <div>
-                <h1>Minhaj</h1>
-                <p>Python & Django Developer</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="profile-header">
+                {% if profile.profile_pic %}
+                    <img src="{{ profile.profile_pic.url }}" alt="Profile Picture">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" alt="Default">
+                {% endif %}
+                
+                <div>
+                    <h1>{{ request.user.username }}</h1>
+                    <p>{{ profile.bio|truncatechars:30 }}</p>
+                </div>
             </div>
-        </div>
 
-        <form>
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" value="Md Minhaj">
-            </div>
-
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" value="minhaj123">
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" value="minhaj@email.com">
+                <input type="text" name="full_name" value="{{ request.user.first_name }}">
             </div>
 
             <div class="form-group">
                 <label>Phone</label>
-                <input type="text" value="+8801XXXXXXXXX">
-            </div>
-
-            <div class="form-group">
-                <label>Date of Birth</label>
-                <input type="date">
+                <input type="text" name="phone" value="{{ profile.phone }}">
             </div>
 
             <div class="form-group">
                 <label>Address</label>
-                <input type="text" value="Dhaka, Bangladesh">
+                <input type="text" name="address" value="{{ profile.address }}">
             </div>
 
             <div class="form-group">
                 <label>About Me</label>
-                <textarea>I am learning Django and building real world projects.</textarea>
+                <textarea name="about">{{ profile.bio }}</textarea>
             </div>
 
             <div class="form-group">
-                <label>Profile Picture</label>
-                <input type="file">
+                <label>Change Profile Picture</label>
+                <input type="file" name="image">
             </div>
 
-            <button class="btn">Update Profile</button>
+            <button type="submit" class="btn">Update Profile</button>
         </form>
     </div>
 
