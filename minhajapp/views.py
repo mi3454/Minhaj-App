@@ -96,9 +96,7 @@ def profile(request):
 
     return render(request, 'profile.html', {'profile': profile})
 
+@login_required(login_url='login')
 def users_list(request):
     users = User.objects.all()
-    return render(request, "users_list.html", {
-        "users": users
-    })
-
+    return render(request, "users_list.html", {"users": users})
