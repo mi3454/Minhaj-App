@@ -55,21 +55,19 @@
     <h1>Registered Users</h1>
 
     <div class="user-grid">
-        {% for user in users %}
-        <div class="user-card">
-            {% if user.profile.image %}
-                <img src="{{ user.profile.image.url }}" class="profile-img" alt="Profile">
-            {% else %}
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-img" alt="Default">
-            {% endif %}
-            
-            <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
-            <p style="font-size: 12px; opacity: 0.7;">@{{ user.username }}</p>
-        </div>
-        {% empty %}
-            <p>No users found.</p>
-        {% endfor %}
+    {% for user in users %}
+    <div class="user-card">
+        {% if user.profile.profile_pic %}
+            <img src="{{ user.profile.profile_pic.url }}" class="profile-img">
+        {% else %}
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-img">
+        {% endif %}
+        
+        <span class="user-name">{{ user.username }}</span>
+        <p>{{ user.email }}</p>
     </div>
+    {% endfor %}
+</div>
 
 </body>
 </html>
