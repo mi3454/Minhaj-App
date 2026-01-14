@@ -99,4 +99,4 @@ def profile(request):
 @login_required(login_url='login')
 def users_list(request):
     users = User.objects.all()
-    return render(request, "users_list.html", {"users_list": users_list})
+    return render(request, "users_list.html", {"users": users})
