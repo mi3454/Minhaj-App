@@ -8,7 +8,7 @@ from .models import Profile
 from django.http import HttpResponse
 
 def home(request):
-    return HttpResponse("<h1>Welcome to Minhaj's App!</h1><p>আপনার ওয়েবসাইটটি এখন লাইভ আছে।</p>")
+    return render(request, "home.html")
 
 def logout_view(request):
     logout(request)
@@ -62,7 +62,14 @@ def signup(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    user_count = User.objects.count() # মোট কতজন ইউজার আছে তা গুনবে
+    all_users = User.objects.all() # সব ইউজারের লিস্ট
+    
+    context = {
+        'user_count': user_count,
+        'users': all_users,
+    }
+    return render(request, 'dashboard.html', context)
 
 @login_required(login_url='login')
 def profile(request):
@@ -88,4 +95,10 @@ def profile(request):
         return redirect('profile')
 
     return render(request, 'profile.html', {'profile': profile})
+
+def users_list(request):
+    users = User.objects.all()
+    return render(request, "users_list.html", {
+        "users": users
+    })
 
