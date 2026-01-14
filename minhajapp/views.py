@@ -73,25 +73,25 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def profile(request):
-    # 'get' এর বদলে 'get_or_create' ব্যবহার করুন
-    # এটি প্রোফাইল না থাকলে অটোমেটিক তৈরি করে দেবে, ফলে এরর আসবে না
+    # প্রোফাইল না থাকলে তৈরি করবে, থাকলে নিয়ে আসবে
     profile, created = Profile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
-        # ইউজারের নাম আপডেট (User মডেল থেকে)
+        # ১. ইউজার মডেলের ডাটা আপডেট (Full Name)
         request.user.first_name = request.POST.get('full_name')
         request.user.save()
 
-        # প্রোফাইল মডেলের ডাটা আপডেট
+        # ২. প্রোফাইল মডেলের টেক্সট ডাটা আপডেট
         profile.phone = request.POST.get('phone')
         profile.address = request.POST.get('address')
         profile.bio = request.POST.get('about')
         
-        # ছবি আপলোড চেক
-        if request.FILES.get('image'):
-            profile.profile_pic = request.FILES.get('image')
+        # ৩. ছবি আপলোড (FILES ডিকশনারি থেকে ডাটা নিতে হবে)
+        if 'image' in request.FILES:
+            profile.profile_pic = request.FILES['image']
         
         profile.save()
+        messages.success(request, 'Your profile has been updated!')
         return redirect('profile')
 
     return render(request, 'profile.html', {'profile': profile})
@@ -99,4 +99,4 @@ def profile(request):
 @login_required(login_url='login')
 def users_list(request):
     users = User.objects.all()
-    return render(request, "users_list.html", {"users_list": users_list})
+    return render(request, "users_list.html", {"users": users})
