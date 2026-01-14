@@ -6,8 +6,11 @@ class Profile(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     address = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
-    profile_pic = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    profile_pic = models.ImageField(
+        upload_to='profile_pics/',
+        blank=True,
+        null=True
+    )
 
-    def __name__(self):
-        return f'{self.user.username} Profile'
-# Create your models here.
+    def __str__(self):
+        return f"{self.user.username} Profile"
