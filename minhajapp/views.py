@@ -5,9 +5,10 @@ from django.contrib.auth import authenticate, login as auth_login, logout # ন�
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Profile
+from django.http import HttpResponse
 
 def home(request):
-    return render(request, 'home.html')
+    return HttpResponse("<h1>Welcome to Minhaj's App!</h1><p>আপনার ওয়েবসাইটটি এখন লাইভ আছে।</p>")
 
 def logout_view(request):
     logout(request)
