@@ -89,6 +89,7 @@ def profile(request):
         # ৩. ছবি আপলোড (FILES ডিকশনারি থেকে ডাটা নিতে হবে)
         if 'image' in request.FILES:
             profile.profile_pic = request.FILES['image']
+
         
         profile.save()
         messages.success(request, 'Your profile has been updated!')
@@ -98,5 +99,9 @@ def profile(request):
 
 @login_required(login_url='login')
 def users_list(request):
-    users = User.objects.all()
+    # প্রোফাইল ডাটা সহ একবারে নিয়ে আসবে
+    users = User.objects.all().select_related('profile') 
     return render(request, "users_list.html", {"users": users})
+
+def test(request):
+    return HttpResponse("DEPLOY ROUTING OK")
