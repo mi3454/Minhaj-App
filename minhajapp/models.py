@@ -7,6 +7,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
     profile_pic = models.ImageField(
+        default='default.jpg',
         upload_to='profile_pics/',
         blank=True,
         null=True
