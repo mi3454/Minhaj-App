@@ -87,7 +87,7 @@ def profile(request):
         profile.bio = request.POST.get('about')
         
         # ৩. ছবি আপলোড (FILES ডিকশনারি থেকে ডাটা নিতে হবে)
-        if 'image' in request.FILES:
+        if 'image' in request.FILES.get('image'):
             profile.profile_pic = request.FILES['image']
 
         
